@@ -4,8 +4,6 @@ import {
   DataType,
   Table,
   Column,
-  BelongsTo,
-  ForeignKey,
   BelongsToMany,
 } from 'sequelize-typescript';
 import { User } from 'src/users/users.model';
@@ -45,6 +43,10 @@ export class Game extends Model<Game, GameCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: false })
   link: string;
 
+  @ApiProperty({
+    example: [User],
+    description: 'This is One to Many prop from USER',
+  })
   @BelongsToMany(() => User, () => GamesUsers)
   users: User[];
 }

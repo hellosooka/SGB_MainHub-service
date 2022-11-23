@@ -6,9 +6,14 @@ import { GamesService } from './games.service';
 import { Game } from './games.model';
 import { FilesModule } from 'src/files/files.module';
 import { GamesUsers } from './games-users.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [FilesModule, SequelizeModule.forFeature([User, Game, GamesUsers])],
+  imports: [
+    AuthModule,
+    FilesModule,
+    SequelizeModule.forFeature([User, Game, GamesUsers]),
+  ],
   controllers: [GamesController],
   providers: [GamesService],
   exports: [GamesService],

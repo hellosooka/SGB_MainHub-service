@@ -25,13 +25,31 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) { }
 
 	@ApiOperation({ summary: 'Creating new user' })
-	@ApiResponse({ status: 200, type: [User] })
+	@ApiResponse({ status: 200, type: User })
 	@UseGuards(JwtAuthGuard)
 	@Roles('ADMIN')
 	@UseGuards(RolesGuard)
 	@Post()
 	createUser(@Body() dto: CreateUserDto) {
 		return this.usersService.createUser(dto);
+	}
+
+	@ApiOperation({ summary: 'Getting user by ID' })
+	@ApiResponse({ status: 200, type: User })
+	@UseGuards(JwtAuthGuard)
+	@Get('/:id')
+	async getUserById(@Param('id') id: number) {
+		return this.usersService.getUserById(id);
+	}
+
+	@ApiOperation({ summary: 'Deleting user by ID' })
+	@ApiResponse({ status: 200, type: User })
+	@UseGuards(JwtAuthGuard)
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
+	@Delete('/:id')
+	async deleteUserById(@Param('id') id: number) {
+		return this.usersService.deleteUser(id);
 	}
 
 	@ApiOperation({ summary: 'Getting all users from Database' })
@@ -54,6 +72,9 @@ export class UsersController {
 		return this.usersService.changeRole(dto);
 	}
 
+	@ApiOperation({ summary: 'Change role to user' })
+	@ApiResponse({ status: 200, type: AddGameDto })
+	@UseGuards(JwtAuthGuard)
 	@Post('/game')
 	addGame(@Body() dto: AddGameDto) {
 		return this.usersService.addGame(dto);
@@ -66,25 +87,7 @@ export class UsersController {
 	@UseGuards(RolesGuard)
 	@Post('/ban')
 	banUser(@Body() dto: BanUserDto) {
-		return this.usersService.ban(dto);
-	}
-
-	@ApiOperation({ summary: 'Getting user by ID' })
-	@ApiResponse({ status: 200, type: User })
-	@UseGuards(JwtAuthGuard)
-	@Get('/:id')
-	async getUserById(@Param('id') id: number) {
-		return this.usersService.findUserById(id);
-	}
-
-	@ApiOperation({ summary: 'Deleting user by ID' })
-	@ApiResponse({ status: 200, type: User })
-	@UseGuards(JwtAuthGuard)
-	@Roles('ADMIN')
-	@UseGuards(RolesGuard)
-	@Delete('/:id')
-	async deleteUserById(@Param('id') id: number) {
-		return this.usersService.deleteUser(id);
+		return this.usersService.banUser(dto);
 	}
 
 	@ApiOperation({ summary: 'Updating user by ID' })

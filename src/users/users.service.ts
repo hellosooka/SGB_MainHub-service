@@ -27,7 +27,7 @@ export class UsersService {
     throw new HttpException('User or Role not found', HttpStatus.NOT_FOUND);
   }
 
-  async findUserById(id: number) {
+  async getUserById(id: number) {
     const user = await this.usersRepository.findOne({
       where: { id },
       include: { all: true },
@@ -44,7 +44,7 @@ export class UsersService {
   }
 
   async deleteUser(id: number) {
-    const user = await this.findUserById(id);
+    const user = await this.getUserById(id);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -60,7 +60,7 @@ export class UsersService {
   }
 
   async changeRole(dto: ChangeRoleDto) {
-    const user = await this.usersRepository.findByPk(dto.userId);
+    const user = await this.getUserById(dto.userId);
     const role = await this.roleService.getRoleByValue(dto.value);
     if (user && role) {
       await user.$set('role', role.id);
@@ -70,8 +70,8 @@ export class UsersService {
   }
 
   async addGame(dto: AddGameDto) {
-    const user = await this.usersRepository.findByPk(dto.userId);
-    const game = await this.gameService.findGame(dto.title);
+    const user = await this.getUserById(dto.userId);
+    const game = await this.gameService.getGameByTitle(dto.title);
 
     if (user && game) {
       await user.$add('games', [game.id]);
@@ -80,8 +80,8 @@ export class UsersService {
     throw new HttpException('User of Game not found', HttpStatus.NOT_FOUND);
   }
 
-  async ban(dto: BanUserDto) {
-    const user = await this.usersRepository.findByPk(dto.userId);
+  async banUser(dto: BanUserDto) {
+    const user = await this.getUserById(dto.userId);
     if (!user) {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }

@@ -22,13 +22,13 @@ export class GamesService {
     return game;
   }
 
-  async deleteGame(title: string) {
-    const game = await this.findGame(title);
+  async deleteGameByTitle(title: string) {
+    const game = await this.getGameByTitle(title);
     game.destroy();
     return game;
   }
 
-  async findGame(title: string) {
+  async getGameByTitle(title: string) {
     const game = await this.gameRepository.findOne({ where: { title } });
     if (!game) {
       throw new HttpException('Game not found', HttpStatus.NOT_FOUND);

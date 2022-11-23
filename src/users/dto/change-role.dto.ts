@@ -9,7 +9,7 @@ export class ChangeRoleDto {
   @IsString()
   readonly value: string;
 
-  @ApiProperty({ example: 1, description: 'This is userId ' })
+  @ApiProperty({ example: 1 })
   @IsNumber()
   readonly userId: number;
 }

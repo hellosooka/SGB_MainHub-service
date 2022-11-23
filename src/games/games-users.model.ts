@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import {
   Model,
   DataType,
@@ -9,6 +9,7 @@ import {
 import { User } from 'src/users/users.model';
 import { Game } from './games.model';
 
+@ApiTags('User games')
 @Table({ tableName: 'user_games', createdAt: false, updatedAt: false })
 export class GamesUsers extends Model<GamesUsers> {
   @ApiProperty({ example: '1', description: 'Unique Identificator' })
@@ -20,12 +21,12 @@ export class GamesUsers extends Model<GamesUsers> {
   })
   id: number;
 
-  @ApiProperty({ example: '1', description: 'Role id' })
+  @ApiProperty({ example: 1, description: 'Game id' })
   @ForeignKey(() => Game)
   @Column({ type: DataType.INTEGER })
   gameId: number;
 
-  @ApiProperty({ example: '1', description: 'User id' })
+  @ApiProperty({ example: 1, description: 'User id' })
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER })
   userId: number;

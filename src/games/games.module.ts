@@ -11,5 +11,6 @@ import { GamesUsers } from './games-users.model';
   imports: [FilesModule, SequelizeModule.forFeature([User, Game, GamesUsers])],
   controllers: [GamesController],
   providers: [GamesService],
+  exports: [GamesService],
 })
 export class GamesModule { }

@@ -7,6 +7,7 @@ import {
   BelongsToMany,
   BelongsTo,
   HasMany,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { GamesUsers } from 'src/games/games-users.model';
 import { Game } from 'src/games/games.model';
@@ -45,9 +46,10 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: true })
   bannedReason: string;
 
-  @BelongsToMany(() => Role, () => UserRoles)
-  roles: Role[];
+  @ForeignKey(() => Role)
+  @Column({ type: DataType.INTEGER })
+  roleId: number;
 
-  @BelongsToMany(() => Game, () => GamesUsers)
-  games: Game[];
+  @BelongsTo(() => Role)
+  role: Role;
 }

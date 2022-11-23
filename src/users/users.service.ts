@@ -14,11 +14,14 @@ export class UsersService {
   ) { }
 
   async createUser(dto: CreateUserDto) {
-    const user = await this.usersRepository.create(dto);
     const role = await this.roleService.getRoleByValue('USER');
-    await user.$set('roles', [role.id]);
-    user.roles = [role];
-    return user;
+    const user = await this.usersRepository.create(dto);
+
+    if (role && user) {
+      await user.$set('role', role.id);
+      return user;
+    }
+    throw new HttpException('User or Role not found', HttpStatus.NOT_FOUND);
   }
 
   async findUserById(id: number) {
@@ -34,9 +37,6 @@ export class UsersService {
       where: { email },
       include: { all: true },
     });
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
     return user;
   }
 

@@ -7,7 +7,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
-import { UserRoles } from './roles/user-role.model';
 import { AuthModule } from './auth/auth.module';
 import { GamesModule } from './games/games.module';
 import { Game } from './games/games.model';
@@ -28,7 +27,7 @@ import * as path from 'path';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRoles, Game, GamesUsers],
+      models: [User, Role, Game, GamesUsers],
       autoLoadModels: true,
     }),
     ServeStaticModule.forRoot({

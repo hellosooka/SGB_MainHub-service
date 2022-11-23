@@ -12,7 +12,6 @@ import {
 import { GamesUsers } from 'src/games/games-users.model';
 import { Game } from 'src/games/games.model';
 import { Role } from 'src/roles/roles.model';
-import { UserRoles } from '../roles/user-role.model';
 
 interface UserCreationAttrs {
   email: string;
@@ -52,4 +51,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @BelongsTo(() => Role)
   role: Role;
+
+  @BelongsToMany(() => Game, () => GamesUsers)
+  games: Game[];
 }

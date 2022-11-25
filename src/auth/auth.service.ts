@@ -19,6 +19,9 @@ export class AuthService {
 
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     return this.generateToken(user);
   }
 

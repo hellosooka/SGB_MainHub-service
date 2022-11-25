@@ -13,6 +13,7 @@ import { Game } from './games/games.model';
 import { FilesModule } from './files/files.module';
 import { GamesUsers } from './games/games-users.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { BlogModule } from './blog/blog.module';
 import * as path from 'path';
 
 @Module({
@@ -38,6 +39,7 @@ import * as path from 'path';
     AuthModule,
     GamesModule,
     FilesModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

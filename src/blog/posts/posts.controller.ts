@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
+import { PostsService } from './posts.service';
 
-@Controller('posts')
+@Controller('blog/posts')
 export class PostsController {
-  @Get()
-  test() {
-    return 'Hello!';
-  }
+  constructor(private readonly postsService: PostsService) { }
+
+  @Post()
+  createNewPost() { }
 }

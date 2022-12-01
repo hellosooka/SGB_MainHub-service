@@ -18,6 +18,7 @@ import { ChangeRoleDto } from './dto/change-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { AddGameDto } from './dto/add-game.dto';
+import { Game } from 'src/games/games.model';
 
 @ApiTags('Users')
 @Controller('users')
@@ -68,16 +69,24 @@ export class UsersController {
 	@Roles('ADMIN')
 	@UseGuards(RolesGuard)
 	@Post('/role')
-	changeRole(@Body() dto: ChangeRoleDto) {
-		return this.usersService.changeRole(dto);
+	changeUserRole(@Body() dto: ChangeRoleDto) {
+		return this.usersService.changeUserRole(dto);
 	}
 
 	@ApiOperation({ summary: 'Change role to user' })
 	@ApiResponse({ status: 200, type: AddGameDto })
 	@UseGuards(JwtAuthGuard)
 	@Post('/game')
-	addGame(@Body() dto: AddGameDto) {
-		return this.usersService.addGame(dto);
+	addGameToUser(@Body() dto: AddGameDto) {
+		return this.usersService.addGameToUser(dto);
+	}
+
+	@ApiOperation({ summary: 'Get all user games' })
+	@ApiResponse({ status: 200, type: [Game] })
+	@UseGuards(JwtAuthGuard)
+	@Get('/:email/games')
+	getUserGames(@Param('email') email: string) {
+		return this.usersService.getUserGames(email);
 	}
 
 	@ApiOperation({ summary: 'Ban user' })

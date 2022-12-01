@@ -32,6 +32,9 @@ export class UsersService {
       where: { id },
       include: { all: true },
     });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     return user;
   }
 
@@ -45,9 +48,6 @@ export class UsersService {
 
   async deleteUser(id: number) {
     const user = await this.getUserById(id);
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
     await user.destroy();
     return user;
   }
@@ -59,35 +59,42 @@ export class UsersService {
     return users;
   }
 
-  async changeRole(dto: ChangeRoleDto) {
-    const user = await this.getUserById(dto.userId);
-    const role = await this.roleService.getRoleByValue(dto.value);
-    if (user && role) {
-      await user.$set('role', role.id);
-      return dto;
-    }
-    throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
-  }
-
-  async addGame(dto: AddGameDto) {
-    const user = await this.getUserById(dto.userId);
-    const game = await this.gameService.getGameByTitle(dto.title);
-
-    if (user && game) {
-      await user.$add('games', [game.id]);
-      return dto;
-    }
-    throw new HttpException('User of Game not found', HttpStatus.NOT_FOUND);
-  }
-
   async banUser(dto: BanUserDto) {
     const user = await this.getUserById(dto.userId);
-    if (!user) {
-      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-    }
     user.banned = true;
     user.bannedReason = dto.banReason;
     await user.save();
     return user;
+  }
+
+  async changeUserRole(dto: ChangeRoleDto) {
+    const user = await this.getUserById(dto.userId);
+    const role = await this.roleService.getRoleByValue(dto.value);
+    if (role) {
+      await user.$set('role', role.id);
+      return dto;
+    }
+    throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+  }
+
+  async addGameToUser(dto: AddGameDto) {
+    const user = await this.getUserById(dto.userId);
+    const game = await this.gameService.getGameByTitle(dto.title);
+
+    if (game) {
+      await user.$add('games', [game.id]);
+      return dto;
+    }
+    throw new HttpException('Game not found', HttpStatus.NOT_FOUND);
+  }
+
+  async getUserGames(email: string) {
+    const user = await this.getUserByEmail(email);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return user.games;
   }
 }

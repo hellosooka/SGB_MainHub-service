@@ -15,6 +15,8 @@ import { GamesUsers } from './games/games-users.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { BlogModule } from './blog/blog.module';
 import * as path from 'path';
+import { Blog } from './blog/blog.model';
+import { Post } from './blog/posts/posts.model';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import * as path from 'path';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, Game, GamesUsers],
+      models: [User, Role, Game, GamesUsers, Blog, Post],
       autoLoadModels: true,
     }),
     ServeStaticModule.forRoot({

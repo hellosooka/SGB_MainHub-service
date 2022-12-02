@@ -7,7 +7,9 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript';
 import { User } from 'src/users/users.model';
+import { GameTags } from './games-tags.model';
 import { GamesUsers } from './games-users.model';
+import { Tag } from './tags/tags.model';
 
 interface GameCreationAttrs {
   title: string;
@@ -49,4 +51,7 @@ export class Game extends Model<Game, GameCreationAttrs> {
   })
   @BelongsToMany(() => User, () => GamesUsers)
   users: User[];
+
+  @BelongsToMany(() => Tag, () => GameTags)
+  tags: [];
 }

@@ -46,6 +46,14 @@ export class GamesController {
     return this.gameService.createGame(dto, image);
   }
 
+  @Post('/:gameTitle/:tagTitle')
+  async addTagToGame(
+    @Param('gameTitle') gameTitle: string,
+    @Param('tagTitle') tagTitle: string,
+  ) {
+    return this.gameService.addTagToGame(gameTitle, tagTitle);
+  }
+
   @ApiOperation({ summary: 'Delete game by title' })
   @ApiResponse({ status: 200, type: Game })
   @UseGuards(JwtAuthGuard)

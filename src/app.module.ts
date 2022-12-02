@@ -17,6 +17,8 @@ import { BlogModule } from './blog/blog.module';
 import * as path from 'path';
 import { Blog } from './blog/blog.model';
 import { Post } from './blog/posts/posts.model';
+import { Tag } from './games/tags/tags.model';
+import { GameTags } from './games/games-tags.model';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { Post } from './blog/posts/posts.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, Game, GamesUsers, Blog, Post],
+      models: [User, Role, Game, Tag, GamesUsers, GameTags, Blog, Post],
       autoLoadModels: true,
     }),
     ServeStaticModule.forRoot({

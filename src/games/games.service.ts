@@ -3,16 +3,18 @@ import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from 'src/files/files.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { Game } from './games.model';
+import { TagsService } from './tags/tags.service';
 
 @Injectable()
 export class GamesService {
   constructor(
     @InjectModel(Game) private gameRepository: typeof Game,
     private readonly filesService: FilesService,
+    private readonly tagsService: TagsService,
   ) { }
 
   async getAllGames() {
-    const games = await this.gameRepository.findAll();
+    const games = await this.gameRepository.findAll({ include: { all: true } });
     return games;
   }
 
@@ -29,10 +31,25 @@ export class GamesService {
   }
 
   async getGameByTitle(title: string) {
-    const game = await this.gameRepository.findOne({ where: { title } });
+    const game = await this.gameRepository.findOne({
+      where: { title },
+      include: { all: true },
+    });
     if (!game) {
       throw new HttpException('Game not found', HttpStatus.NOT_FOUND);
     }
     return game;
+  }
+
+  async addTagToGame(gameTitle: string, tagTitle: string) {
+    const game = await this.getGameByTitle(gameTitle);
+    const tag = await this.tagsService.getTagByTitle(tagTitle);
+
+    if (game && tag) {
+      game.$add('tags', tag.id);
+      return game;
+    }
+
+    throw new HttpException('Game or Tag not found', HttpStatus.NOT_FOUND);
   }
 }

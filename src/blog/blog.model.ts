@@ -17,7 +17,7 @@ export class Blog extends Model<Blog, BlogCreationAttrs> {
   })
   id: number;
 
-  @Column({ type: DataType.INTEGER, unique: true })
+  @Column({ type: DataType.STRING, unique: true })
   title: string;
 
   @HasMany(() => Post)

@@ -43,7 +43,6 @@ export class UsersService {
   async getUserByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: { email },
-      include: { all: true },
     });
     return user;
   }
@@ -55,9 +54,7 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.usersRepository.findAll({
-      include: { all: true },
-    });
+    const users = await this.usersRepository.findAll();
     return users;
   }
 
@@ -102,7 +99,7 @@ export class UsersService {
 
   async addUserImage(email: string, image) {
     const user = await this.getUserByEmail(email);
-    const fileName = await this.filesService.createFile(image, 'user-');
+    const fileName = await this.filesService.createFile(image, 'user');
     if (user) {
       user.image = fileName;
       await user.save();

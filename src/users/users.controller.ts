@@ -40,7 +40,6 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Getting user by ID' })
 	@ApiResponse({ status: 200, type: User })
-	@UseGuards(JwtAuthGuard)
 	@Get('/:id')
 	async getUserById(@Param('id') id: number) {
 		return this.usersService.getUserById(id);

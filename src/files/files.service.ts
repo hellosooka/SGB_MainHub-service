@@ -9,7 +9,7 @@ export class FilesService {
     try {
       let fileName = '';
       if (prefix) {
-        fileName = `${prefix}${uuid.v4()}.jpg`;
+        fileName = `${prefix}-${uuid.v4()}.jpg`;
       } else {
         fileName = uuid.v4() + '.jpg';
       }

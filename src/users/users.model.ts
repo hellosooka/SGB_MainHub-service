@@ -45,6 +45,10 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: true })
   bannedReason: string;
 
+  @ApiProperty({})
+  @Column({ type: DataType.STRING, allowNull: true })
+  image: string;
+
   @ForeignKey(() => Role)
   @Column({ type: DataType.INTEGER })
   roleId: number;

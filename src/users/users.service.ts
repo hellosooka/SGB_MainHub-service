@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.model';
 import { GamesService } from 'src/games/games.service';
 import { AddGameDto } from './dto/add-game.dto';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
     @InjectModel(User) private usersRepository: typeof User,
     private roleService: RolesService,
     private gameService: GamesService,
+    private filesService: FilesService,
   ) { }
 
   async createUser(dto: CreateUserDto) {
@@ -96,5 +98,17 @@ export class UsersService {
     }
 
     return user.games;
+  }
+
+  async addUserImage(email: string, image) {
+    const user = await this.getUserByEmail(email);
+    const fileName = await this.filesService.createFile(image, 'user-');
+    if (user) {
+      user.image = fileName;
+      await user.save();
+      return user;
+    }
+
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

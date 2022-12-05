@@ -7,6 +7,8 @@ import {
 	Body,
 	Param,
 	UseGuards,
+	UploadedFile,
+	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +21,7 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { AddGameDto } from './dto/add-game.dto';
 import { Game } from 'src/games/games.model';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Users')
 @Controller('users')
@@ -45,9 +48,6 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Deleting user by ID' })
 	@ApiResponse({ status: 200, type: User })
-	@UseGuards(JwtAuthGuard)
-	@Roles('ADMIN')
-	@UseGuards(RolesGuard)
 	@Delete('/:id')
 	async deleteUserById(@Param('id') id: number) {
 		return this.usersService.deleteUser(id);
@@ -55,9 +55,6 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Getting all users from Database' })
 	@ApiResponse({ status: 200, type: [User] })
-	@UseGuards(JwtAuthGuard)
-	@Roles('ADMIN')
-	@UseGuards(RolesGuard)
 	@Get()
 	getAllUsers() {
 		return this.usersService.getAllUsers();
@@ -87,6 +84,12 @@ export class UsersController {
 	@Get('/:email/games')
 	getUserGames(@Param('email') email: string) {
 		return this.usersService.getUserGames(email);
+	}
+
+	@UseInterceptors(FileInterceptor('image'))
+	@Post('/:email/image')
+	addUserImage(@Param('email') email: string, @UploadedFile() image: object) {
+		return this.usersService.addUserImage(email, image);
 	}
 
 	@ApiOperation({ summary: 'Ban user' })

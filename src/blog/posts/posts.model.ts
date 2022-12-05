@@ -26,9 +26,14 @@ export class Post extends Model<Post, PostCreationAttrs> {
   })
   id: number;
 
+  @ApiProperty({ example: 'Post' })
   @Column({ type: DataType.STRING, unique: true })
   title: string;
 
+  @ApiProperty({
+    example: '# Title /n ## Some subtitle',
+    description: 'This is Markdown',
+  })
   @Column({ type: DataType.STRING })
   content: string;
 

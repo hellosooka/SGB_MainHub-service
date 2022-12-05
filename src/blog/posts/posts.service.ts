@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from 'src/files/files.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './posts.model';
 
 @Injectable()
@@ -31,5 +32,18 @@ export class PostsService {
       return post;
     }
     throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+  }
+
+  async deletePostByTitle(title: string) {
+    const post = await this.getPostByTitle(title);
+    await post.destroy();
+    return post;
+  }
+
+  async updatePostByTitle(dto: UpdatePostDto, title: string) {
+    const post = await this.getPostByTitle(title);
+    post.content = dto.content;
+    await post.save();
+    return post;
   }
 }

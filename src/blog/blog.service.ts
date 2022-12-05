@@ -1,7 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Blog } from './blog.model';
 import { CreateBlogDto } from './dto/create-blog.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 import { CreatePostDto } from './posts/dto/create-post.dto';
 import { PostsService } from './posts/posts.service';
 
@@ -26,6 +32,25 @@ export class BlogService {
   async createBlog(dto: CreateBlogDto) {
     const blog = await this.blogRepository.create(dto);
     return blog;
+  }
+
+  async deleteBlog(id: number) {
+    const blog = await this.blogRepository.findByPk(id);
+    if (blog) {
+      await blog.destroy();
+      return blog;
+    }
+    throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
+  }
+
+  async updateBlog(dto: UpdateBlogDto) {
+    const blog = await this.blogRepository.findByPk(dto.id);
+    if (blog) {
+      blog.title = dto.title;
+      blog.save();
+      return blog;
+    }
+    throw new HttpException('Blog not found', HttpStatus.NOT_FOUND);
   }
 
   async getAllBlogs() {

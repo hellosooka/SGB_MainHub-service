@@ -9,6 +9,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/users.model';
+import { ReregisterUserDto } from './dto/reregister-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,12 +40,39 @@ export class AuthService {
     if (candidate) {
       throw new HttpException('User is exist', HttpStatus.BAD_REQUEST);
     }
+    const user = await this.generatePayload(dto);
+    return this.generateToken(user);
+  }
+
+  async reregister(dto: ReregisterUserDto) {
+    const candidate: CreateUserDto = {
+      email: dto.oldEmail,
+      password: dto.oldPassword,
+    };
+
+    const user = await this.validateUser(candidate);
+
+    if (!user) {
+      console.log(user);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const hashPassword = await bcrypt.hash(dto.newPassword, 5);
+    const newUser = await this.userService.changeUser({
+      ...dto,
+      newPassword: hashPassword,
+    });
+
+    return this.generateToken(newUser);
+  }
+
+  async generatePayload(dto: CreateUserDto) {
     const hashPassword = await bcrypt.hash(dto.password, 5);
     const user = await this.userService.createUser({
       ...dto,
       password: hashPassword,
     });
-    return this.generateToken(user);
+    return user;
   }
 
   private generateToken(user: User) {

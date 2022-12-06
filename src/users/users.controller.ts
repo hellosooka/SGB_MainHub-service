@@ -101,6 +101,11 @@ export class UsersController {
 		return this.usersService.banUser(dto);
 	}
 
+	@Post('/:id/unban')
+	unbanUser(@Param('id') id: number) {
+		return this.usersService.unbanUser(id);
+	}
+
 	@ApiOperation({ summary: 'Updating user by ID' })
 	@ApiResponse({ status: 201, type: User })
 	@Put()

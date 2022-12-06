@@ -8,6 +8,7 @@ import { User } from './users.model';
 import { GamesService } from 'src/games/games.service';
 import { AddGameDto } from './dto/add-game.dto';
 import { FilesService } from 'src/files/files.service';
+import { ChangeUserDto } from './dto/change-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,6 +45,7 @@ export class UsersService {
   async getUserByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: { email },
+      include: { all: true },
     });
     return user;
   }
@@ -52,6 +54,17 @@ export class UsersService {
     const user = await this.getUserById(id);
     await user.destroy();
     return user;
+  }
+
+  async changeUser(dto: ChangeUserDto) {
+    const user = await this.getUserByEmail(dto.oldEmail);
+    if (user) {
+      user.email = dto.newEmail;
+      user.password = dto.newPassword;
+      await user.save();
+      return user;
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 
   async getAllUsers() {

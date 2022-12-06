@@ -14,6 +14,7 @@ import { Tag } from './tags/tags.model';
 interface GameCreationAttrs {
   title: string;
   description: string;
+  price: number;
   image: string;
   link: string;
 }
@@ -40,6 +41,9 @@ export class Game extends Model<Game, GameCreationAttrs> {
   @ApiProperty({})
   @Column({ type: DataType.STRING })
   image: string;
+
+  @Column({ type: DataType.INTEGER, defaultValue: 0, allowNull: false })
+  price: number;
 
   @ApiProperty({ example: 'http://google.com', description: 'link to game' })
   @Column({ type: DataType.STRING, allowNull: false })

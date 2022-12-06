@@ -1,4 +1,4 @@
-import { IsObject, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateGameDto {
   @IsString()
@@ -9,6 +9,8 @@ export class CreateGameDto {
 
   @IsString()
   link: string;
+
+  price: number;
 
   image: string;
 }

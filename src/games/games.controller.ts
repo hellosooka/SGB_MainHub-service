@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   Param,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -17,6 +18,7 @@ import { Game } from './games.model';
 import { Roles } from 'src/decorators/roles-auth.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { ChangeGameDto } from './dto/change-game.dto';
 
 @ApiTags('Games')
 @Controller('games')
@@ -46,14 +48,6 @@ export class GamesController {
     return this.gameService.createGame(dto, image);
   }
 
-  @Post('/:gameTitle/:tagTitle')
-  async addTagToGame(
-    @Param('gameTitle') gameTitle: string,
-    @Param('tagTitle') tagTitle: string,
-  ) {
-    return this.gameService.addTagToGame(gameTitle, tagTitle);
-  }
-
   @ApiOperation({ summary: 'Delete game by title' })
   @ApiResponse({ status: 200, type: Game })
   @UseGuards(JwtAuthGuard)
@@ -62,5 +56,21 @@ export class GamesController {
   @Delete('/:title')
   async deleteGameByTitle(@Param('title') title: string) {
     return this.gameService.deleteGameByTitle(title);
+  }
+
+  @Put('/:title')
+  async changeGameByTitle(
+    @Param('title') title: string,
+    @Body() dto: ChangeGameDto,
+  ) {
+    return this.gameService.changeGameByTitle(title, dto);
+  }
+
+  @Post('/:gameTitle/:tagTitle')
+  async addTagToGame(
+    @Param('gameTitle') gameTitle: string,
+    @Param('tagTitle') tagTitle: string,
+  ) {
+    return this.gameService.addTagToGame(gameTitle, tagTitle);
   }
 }

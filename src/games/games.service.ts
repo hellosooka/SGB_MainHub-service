@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from 'src/files/files.service';
+import { ChangeGameDto } from './dto/change-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 import { Game } from './games.model';
 import { TagsService } from './tags/tags.service';
@@ -38,6 +39,15 @@ export class GamesService {
     if (!game) {
       throw new HttpException('Game not found', HttpStatus.NOT_FOUND);
     }
+    return game;
+  }
+
+  async changeGameByTitle(title: string, dto: ChangeGameDto) {
+    const game = await this.getGameByTitle(title);
+    game.title = dto.title;
+    game.description = dto.description;
+    game.link = dto.link;
+    await game.save();
     return game;
   }
 

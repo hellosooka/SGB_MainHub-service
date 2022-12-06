@@ -51,6 +51,15 @@ export class GamesService {
     return game;
   }
 
+  async changeGameImageByTitle(title: string, image) {
+    const game = await this.getGameByTitle(title);
+    const fileName = await this.filesService.createFile(image);
+
+    game.image = fileName;
+    await game.save();
+    return game;
+  }
+
   async addTagToGame(gameTitle: string, tagTitle: string) {
     const game = await this.getGameByTitle(gameTitle);
     const tag = await this.tagsService.getTagByTitle(tagTitle);

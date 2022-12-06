@@ -9,6 +9,7 @@ import {
   Param,
   UseGuards,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -64,6 +65,15 @@ export class GamesController {
     @Body() dto: ChangeGameDto,
   ) {
     return this.gameService.changeGameByTitle(title, dto);
+  }
+
+  @UseInterceptors(FileInterceptor('image'))
+  @Patch('/:title')
+  async changeGameImageByTitle(
+    @Param('title') title: string,
+    @UploadedFile() image: object,
+  ) {
+    return this.gameService.changeGameImageByTitle(title, image);
   }
 
   @Post('/:gameTitle/:tagTitle')

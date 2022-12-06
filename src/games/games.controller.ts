@@ -28,6 +28,9 @@ export class GamesController {
 
   @ApiOperation({ summary: 'Getting all games' })
   @ApiResponse({ status: 200, type: [Game] })
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'USER')
+  @UseGuards(RolesGuard)
   @Get()
   getAllGames() {
     return this.gameService.getAllGames();

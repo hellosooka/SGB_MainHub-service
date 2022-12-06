@@ -4,6 +4,7 @@ import { FilesService } from 'src/files/files.service';
 import { ChangeGameDto } from './dto/change-game.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 import { Game } from './games.model';
+import { Tag } from './tags/tags.model';
 import { TagsService } from './tags/tags.service';
 
 @Injectable()
@@ -15,7 +16,9 @@ export class GamesService {
   ) { }
 
   async getAllGames() {
-    const games = await this.gameRepository.findAll({ include: { all: true } });
+    const games = await this.gameRepository.findAll({
+      include: { model: Tag },
+    });
     return games;
   }
 
@@ -34,7 +37,7 @@ export class GamesService {
   async getGameByTitle(title: string) {
     const game = await this.gameRepository.findOne({
       where: { title },
-      include: { all: true },
+      include: { model: Tag },
     });
     if (!game) {
       throw new HttpException('Game not found', HttpStatus.NOT_FOUND);

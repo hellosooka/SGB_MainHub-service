@@ -9,6 +9,8 @@ import { GamesService } from 'src/games/games.service';
 import { AddGameDto } from './dto/add-game.dto';
 import { FilesService } from 'src/files/files.service';
 import { ChangeUserDto } from './dto/change-user.dto';
+import { Game } from 'src/games/games.model';
+import { Role } from 'src/roles/roles.model';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +22,7 @@ export class UsersService {
   ) { }
 
   async createUser(dto: CreateUserDto) {
-    const role = await this.roleService.getRoleByValue('ADMIN');
+    const role = await this.roleService.getRoleByValue('USER');
     const user = await this.usersRepository.create(dto);
 
     if (role && user) {
@@ -45,7 +47,7 @@ export class UsersService {
   async getUserByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: { email },
-      include: { all: true },
+      include: [{ model: Game }, { model: Role }],
     });
     return user;
   }
@@ -68,7 +70,9 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    const users = await this.usersRepository.findAll();
+    const users = await this.usersRepository.findAll({
+      include: [{ model: Game }, { model: Role }],
+    });
     return users;
   }
 

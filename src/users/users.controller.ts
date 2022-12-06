@@ -22,6 +22,7 @@ import { RolesGuard } from 'src/guards/roles.guard';
 import { AddGameDto } from './dto/add-game.dto';
 import { Game } from 'src/games/games.model';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ChangeUserDto } from './dto/change-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -30,7 +31,6 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Creating new user' })
 	@ApiResponse({ status: 200, type: User })
-	@UseGuards(JwtAuthGuard)
 	@Roles('ADMIN')
 	@UseGuards(RolesGuard)
 	@Post()
@@ -40,6 +40,8 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Getting user by ID' })
 	@ApiResponse({ status: 200, type: User })
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
 	@Get('/:id')
 	async getUserById(@Param('id') id: number) {
 		return this.usersService.getUserById(id);
@@ -47,13 +49,22 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Deleting user by ID' })
 	@ApiResponse({ status: 200, type: User })
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
 	@Delete('/:id')
 	async deleteUserById(@Param('id') id: number) {
 		return this.usersService.deleteUser(id);
 	}
 
+	@Put()
+	async changeUserById(@Body() dto: ChangeUserDto) {
+		return this.usersService.changeUser(dto);
+	}
+
 	@ApiOperation({ summary: 'Getting all users from Database' })
 	@ApiResponse({ status: 200, type: [User] })
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
 	@Get()
 	getAllUsers() {
 		return this.usersService.getAllUsers();
@@ -71,7 +82,8 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Change role to user' })
 	@ApiResponse({ status: 200, type: AddGameDto })
-	@UseGuards(JwtAuthGuard)
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
 	@Post('/game')
 	addGameToUser(@Body() dto: AddGameDto) {
 		return this.usersService.addGameToUser(dto);
@@ -79,13 +91,16 @@ export class UsersController {
 
 	@ApiOperation({ summary: 'Get all user games' })
 	@ApiResponse({ status: 200, type: [Game] })
-	@UseGuards(JwtAuthGuard)
+	@Roles('ADMIN', 'USER')
+	@UseGuards(RolesGuard)
 	@Get('/:email/games')
 	getUserGames(@Param('email') email: string) {
 		return this.usersService.getUserGames(email);
 	}
 
 	@UseInterceptors(FileInterceptor('image'))
+	@Roles('ADMIN', 'USER')
+	@UseGuards(RolesGuard)
 	@Post('/:email/image')
 	addUserImage(@Param('email') email: string, @UploadedFile() image: object) {
 		return this.usersService.addUserImage(email, image);
@@ -101,6 +116,8 @@ export class UsersController {
 		return this.usersService.banUser(dto);
 	}
 
+	@Roles('ADMIN')
+	@UseGuards(RolesGuard)
 	@Post('/:id/unban')
 	unbanUser(@Param('id') id: number) {
 		return this.usersService.unbanUser(id);

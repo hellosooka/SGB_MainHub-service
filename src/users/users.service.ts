@@ -19,11 +19,12 @@ export class UsersService {
   ) { }
 
   async createUser(dto: CreateUserDto) {
-    const role = await this.roleService.getRoleByValue('ADMIN');
+    const role = await this.roleService.getRoleByValue('USER');
     const user = await this.usersRepository.create(dto);
 
     if (role && user) {
       await user.$set('role', role.id);
+      user.role = role;
       return user;
     }
     throw new HttpException('User or Role not found', HttpStatus.NOT_FOUND);
@@ -62,6 +63,14 @@ export class UsersService {
     const user = await this.getUserById(dto.userId);
     user.banned = true;
     user.bannedReason = dto.banReason;
+    await user.save();
+    return user;
+  }
+
+  async unbanUser(userId: number) {
+    const user = await this.getUserById(userId);
+    user.banned = false;
+    user.bannedReason = null;
     await user.save();
     return user;
   }

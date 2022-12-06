@@ -9,7 +9,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/users.model';
-import { ReregisterUserDto } from './dto/reregister-user.dto';
+import { ChangeUserDto } from 'src/users/dto/change-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,7 +44,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  async reregister(dto: ReregisterUserDto) {
+  async reregister(dto: ChangeUserDto) {
     const candidate: CreateUserDto = {
       email: dto.oldEmail,
       password: dto.oldPassword,

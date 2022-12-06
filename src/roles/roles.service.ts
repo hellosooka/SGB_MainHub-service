@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ChangeRoleDto } from './dto/change-role.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './roles.model';
 
@@ -14,6 +15,9 @@ export class RolesService {
 
   async deleteRole(value: string) {
     const role = await this.rolesRepository.findOne({ where: { value } });
+    if (!role) {
+      throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+    }
     role.destroy();
     return role;
   }
@@ -29,5 +33,16 @@ export class RolesService {
       return role;
     }
     throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+  }
+
+  async changeRole(value: string, dto: ChangeRoleDto) {
+    const role = await this.getRoleByValue(value);
+    if (!role) {
+      throw new HttpException('role not found', HttpStatus.NOT_FOUND);
+    }
+    role.value = dto.value;
+    role.description = dto.description;
+    await role.save();
+    return role;
   }
 }

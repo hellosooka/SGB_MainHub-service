@@ -16,7 +16,7 @@ import { UsersService } from './users.service';
 import { User } from './users.model';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Roles } from 'src/decorators/roles-auth.decorator';
-import { ChangeRoleDto } from './dto/change-role.dto';
+import { ChangeUserRoleDto } from './dto/change-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { AddGameDto } from './dto/add-game.dto';
@@ -60,12 +60,12 @@ export class UsersController {
 	}
 
 	@ApiOperation({ summary: 'Change role to user' })
-	@ApiResponse({ status: 200, type: ChangeRoleDto })
+	@ApiResponse({ status: 200, type: ChangeUserRoleDto })
 	@UseGuards(JwtAuthGuard)
 	@Roles('ADMIN')
 	@UseGuards(RolesGuard)
 	@Post('/role')
-	changeUserRole(@Body() dto: ChangeRoleDto) {
+	changeUserRole(@Body() dto: ChangeUserRoleDto) {
 		return this.usersService.changeUserRole(dto);
 	}
 

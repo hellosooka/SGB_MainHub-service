@@ -5,14 +5,14 @@ import {
   Post,
   Get,
   Delete,
-  UsePipes,
-  ValidationPipe,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/roles-auth.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { ChangeRoleDto } from './dto/change-role.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Role } from './roles.model';
 import { RolesService } from './roles.service';
@@ -57,5 +57,13 @@ export class RolesController {
   @Get('/:value')
   async getRoleByValue(@Param('value') value: string) {
     return this.rolesService.getRoleByValue(value);
+  }
+
+  @Put('/:value')
+  async changeRoleByValue(
+    @Param('value') value: string,
+    @Body() dto: ChangeRoleDto,
+  ) {
+    return this.rolesService.changeRole(value, dto);
   }
 }

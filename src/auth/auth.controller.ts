@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ChangeUserDto } from 'src/users/dto/change-user.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
-import { ReregisterUserDto } from './dto/reregister-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Post('reregister')
-  reregister(@Body() dto: ReregisterUserDto) {
+  reregister(@Body() dto: ChangeUserDto) {
     return this.authService.reregister(dto);
   }
 }

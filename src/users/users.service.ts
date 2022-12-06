@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from 'src/roles/roles.service';
-import { ChangeRoleDto } from './dto/change-role.dto';
+import { ChangeUserRoleDto } from './dto/change-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.model';
@@ -88,7 +88,7 @@ export class UsersService {
     return user;
   }
 
-  async changeUserRole(dto: ChangeRoleDto) {
+  async changeUserRole(dto: ChangeUserRoleDto) {
     const user = await this.getUserById(dto.userId);
     const role = await this.roleService.getRoleByValue(dto.value);
     if (role) {

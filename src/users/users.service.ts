@@ -113,16 +113,6 @@ export class UsersService {
     throw new HttpException('Game not found', HttpStatus.NOT_FOUND);
   }
 
-  async getUserGames(email: string) {
-    const user = await this.getUserByEmail(email);
-
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    return user.games;
-  }
-
   async addUserImage(email: string, image) {
     const user = await this.getUserByEmail(email);
     const fileName = await this.filesService.createFile(image, 'user');

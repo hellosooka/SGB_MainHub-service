@@ -89,13 +89,9 @@ export class UsersController {
 		return this.usersService.addGameToUser(dto);
 	}
 
-	@ApiOperation({ summary: 'Get all user games' })
-	@ApiResponse({ status: 200, type: [Game] })
-	@Roles('ADMIN', 'USER')
-	@UseGuards(RolesGuard)
-	@Get('/:email/games')
-	getUserGames(@Param('email') email: string) {
-		return this.usersService.getUserGames(email);
+	@Get('/:email/data')
+	getUserDataByEmail(@Param('email') email: string) {
+		return this.usersService.getUserByEmail(email);
 	}
 
 	@UseInterceptors(FileInterceptor('image'))

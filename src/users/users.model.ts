@@ -14,6 +14,7 @@ import { Game } from 'src/games/games.model';
 import { Role } from 'src/roles/roles.model';
 
 interface UserCreationAttrs {
+  nickname: string;
   email: string;
   password: string;
 }
@@ -28,6 +29,10 @@ export class User extends Model<User, UserCreationAttrs> {
     primaryKey: true,
   })
   id: number;
+
+  @ApiProperty({ example: 'nickname' })
+  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  nickname: string;
 
   @ApiProperty({ example: 'test@test.com', description: 'User email' })
   @Column({ type: DataType.STRING, unique: true, allowNull: false })

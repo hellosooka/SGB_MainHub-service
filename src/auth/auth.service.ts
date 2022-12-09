@@ -28,6 +28,9 @@ export class AuthService {
 
   private async validateUser(dto: CreateUserDto) {
     const user = await this.userService.getUserByEmail(dto.email);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     const passwordEquals = await bcrypt.compare(dto.password, user.password);
     if (user && passwordEquals) {
       return user;
@@ -36,9 +39,15 @@ export class AuthService {
   }
 
   async register(dto: CreateUserDto) {
-    const candidate = await this.userService.getUserByEmail(dto.email);
-    if (candidate) {
+    const candidateByEmail = await this.userService.getUserByEmail(dto.email);
+    const candidateByNickname = await this.userService.getUserByNickname(
+      dto.nickname,
+    );
+    if (candidateByEmail) {
       throw new HttpException('User is exist', HttpStatus.BAD_REQUEST);
+    }
+    if (candidateByNickname) {
+      throw new HttpException('Nickname is exist', HttpStatus.BAD_REQUEST);
     }
     const user = await this.generatePayload(dto);
     return this.generateToken(user);
@@ -46,6 +55,7 @@ export class AuthService {
 
   async reregister(dto: ChangeUserDto) {
     const candidate: CreateUserDto = {
+      nickname: dto.oldNickname,
       email: dto.oldEmail,
       password: dto.oldPassword,
     };
@@ -76,7 +86,11 @@ export class AuthService {
   }
 
   private generateToken(user: User) {
-    const payload = { email: user.email, id: user.id, roles: user.role };
+    const payload = {
+      email: user.email,
+      id: user.id,
+      roles: user.role,
+    };
     return {
       token: this.jwtService.sign(payload),
     };

@@ -56,11 +56,6 @@ export class UsersController {
 		return this.usersService.deleteUser(id);
 	}
 
-	@Put()
-	async changeUserById(@Body() dto: ChangeUserDto) {
-		return this.usersService.changeUser(dto);
-	}
-
 	@ApiOperation({ summary: 'Getting all users from Database' })
 	@ApiResponse({ status: 200, type: [User] })
 	@Roles('ADMIN')
@@ -89,9 +84,9 @@ export class UsersController {
 		return this.usersService.addGameToUser(dto);
 	}
 
-	@Get('/:email/data')
-	getUserDataByEmail(@Param('email') email: string) {
-		return this.usersService.getUserByEmail(email);
+	@Get('/:nickname/data')
+	getUserDataByNickname(@Param('nickname') nickname: string) {
+		return this.usersService.getUserByNickname(nickname);
 	}
 
 	@UseInterceptors(FileInterceptor('image'))

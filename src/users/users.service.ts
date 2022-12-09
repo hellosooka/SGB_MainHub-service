@@ -52,6 +52,14 @@ export class UsersService {
     return user;
   }
 
+  async getUserByNickname(nickname: string) {
+    const user = await this.usersRepository.findOne({
+      where: { nickname },
+      include: [{ model: Game }, { model: Role }],
+    });
+    return user;
+  }
+
   async deleteUser(id: number) {
     const user = await this.getUserById(id);
     await user.destroy();
@@ -61,6 +69,7 @@ export class UsersService {
   async changeUser(dto: ChangeUserDto) {
     const user = await this.getUserByEmail(dto.oldEmail);
     if (user) {
+      user.nickname = dto.newNickname;
       user.email = dto.newEmail;
       user.password = dto.newPassword;
       await user.save();

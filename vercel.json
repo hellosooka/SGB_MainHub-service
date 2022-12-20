@@ -9,12 +9,6 @@
     "POSTGRES_PASSWORD": "yB8TE7BCTMS^CPQU",
     "PRIVATE_KEY": "secret_key"
   },
-  "builds": [
-    {
-      "src": "src/main.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",

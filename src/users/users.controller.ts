@@ -20,9 +20,7 @@ import { ChangeUserRoleDto } from './dto/change-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { AddGameDto } from './dto/add-game.dto';
-import { Game } from 'src/games/games.model';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ChangeUserDto } from './dto/change-user.dto';
 
 @ApiTags('Users')
 @Controller('users')

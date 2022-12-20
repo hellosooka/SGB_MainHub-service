@@ -8,9 +8,9 @@ import { User } from './users.model';
 import { GamesService } from 'src/games/games.service';
 import { AddGameDto } from './dto/add-game.dto';
 import { FilesService } from 'src/files/files.service';
-import { ChangeUserDto } from './dto/change-user.dto';
 import { Game } from 'src/games/games.model';
 import { Role } from 'src/roles/roles.model';
+import { ChangeUserDto } from 'src/auth/dto/change-user.dto';
 
 @Injectable()
 export class UsersService {

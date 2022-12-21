@@ -9,8 +9,11 @@ export class RolesService {
   constructor(@InjectModel(Role) private rolesRepository: typeof Role) { }
 
   async createRole(dto: CreateRoleDto) {
-    const role = await this.rolesRepository.create(dto);
-    return role;
+    const role = await this.getRoleByValue(dto.value);
+    if (role) {
+      throw new HttpException('Role already exist', HttpStatus.CONFLICT);
+    }
+    return await this.rolesRepository.create(dto);
   }
 
   async deleteRole(value: string) {

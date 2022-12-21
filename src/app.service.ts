@@ -10,7 +10,7 @@ export class AppService {
   ) { }
 
   async initializeProject() {
-    if (this.checkPreviousAttempt()) {
+    if (await this.checkPreviousAttempt()) {
       throw new HttpException(
         'Project already initialized',
         HttpStatus.CONFLICT,
@@ -22,8 +22,10 @@ export class AppService {
   }
 
   private async checkPreviousAttempt() {
-    const roles = await this.rolesService.getAllRoles();
-    if (roles.length > 0) {
+    const user = await this.userService.getUserByEmail(
+      'leo.zemtsoff@gmail.com',
+    );
+    if (user) {
       return true;
     } else {
       return false;
@@ -44,8 +46,8 @@ export class AppService {
   private async createAdmin() {
     const user = await this.userService.createUser({
       nickname: 'ADMIN',
-      email: 'leo.zemtsoff@icloud.com',
-      password: process.env.ADMIN_PASSWORD,
+      email: 'leo.zemtsoff@gmail.com',
+      password: `${process.env.ADMIN_PASSWORD}`,
     });
     return await this.userService.changeUserRole({
       value: 'ADMIN',

@@ -82,13 +82,13 @@ export class UsersController {
     return this.usersService.addGameToUser(dto);
   }
 
+  @Roles('ADMIN', 'USER')
+  @UseGuards(RolesGuard)
   @Get('/:nickname/data')
   getUserDataByNickname(@Param('nickname') nickname: string) {
     return this.usersService.getUserByNickname(nickname);
   }
 
-  @Roles('ADMIN', 'USER')
-  @UseGuards(RolesGuard)
   @Get(':email/nickname')
   getUserNicknameByEmail(@Param('email') email: string) {
     return this.usersService.getUserNicknameByEmail(email);

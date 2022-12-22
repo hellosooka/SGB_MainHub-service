@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AuthService } from './auth/auth.service';
 import { RolesService } from './roles/roles.service';
 import { UsersService } from './users/users.service';
 
@@ -7,6 +8,7 @@ export class AppService {
   constructor(
     private rolesService: RolesService,
     private userService: UsersService,
+    private authService: AuthService,
   ) { }
 
   async initializeProject() {
@@ -44,14 +46,17 @@ export class AppService {
   }
 
   private async createAdmin() {
-    const user = await this.userService.createUser({
+    await this.authService.register({
       nickname: 'ADMIN',
-      email: 'leo.zemtsoff@gmail.com',
+      email: 'leo.zemtsoff@icloud.com',
       password: `${process.env.ADMIN_PASSWORD}`,
     });
+    const admin = await this.userService.getUserByEmail(
+      'leo.zemtsoff@icloud.com',
+    );
     return await this.userService.changeUserRole({
       value: 'ADMIN',
-      userId: user.id,
+      userId: admin.id,
     });
   }
 }

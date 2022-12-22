@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
@@ -94,5 +94,13 @@ export class AuthService {
     return {
       token: this.jwtService.sign(payload),
     };
+  }
+
+  async checkToken(token: string) {
+    try {
+      return this.jwtService.verify(token);
+    } catch (e) {
+      return { ...e };
+    }
   }
 }

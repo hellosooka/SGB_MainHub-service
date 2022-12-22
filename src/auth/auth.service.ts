@@ -100,7 +100,21 @@ export class AuthService {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.UNAUTHORIZED);
+      return this.updateToken(token);
+    }
+  }
+
+  async updateToken(token: string) {
+    try {
+      const payload = this.jwtService.decode(token);
+      if (typeof payload != 'string') {
+        if ('email' in payload) {
+          const user = await this.userService.getUserByEmail(payload.email);
+          return this.generateToken(user);
+        }
+      }
+    } catch (e) {
+      throw new HttpException('Bad token', HttpStatus.UNAUTHORIZED);
     }
   }
 }

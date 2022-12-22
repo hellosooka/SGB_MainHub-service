@@ -7,6 +7,14 @@ async function bootstrap() {
   const PORT = process.env.PORT;
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    methods: ['GET', 'POST', 'PUT'],
+    origin: [
+      'http://localhost:5173',
+      'https://sgb-main-hub-client-xx82.vercel.app',
+    ],
+  });
+
   createDocumentation(app);
 
   app.useGlobalPipes(new ValidationPipe());

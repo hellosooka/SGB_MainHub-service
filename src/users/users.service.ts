@@ -19,7 +19,7 @@ export class UsersService {
     private roleService: RolesService,
     private gameService: GamesService,
     private filesService: FilesService,
-  ) { }
+  ) {}
 
   async createUser(dto: CreateUserDto) {
     const role = await this.roleService.getRoleByValue('USER');
@@ -64,6 +64,11 @@ export class UsersService {
     const user = await this.getUserById(id);
     await user.destroy();
     return user;
+  }
+
+  async getUserNicknameByEmail(email: string) {
+    const user = await this.getUserByEmail(email);
+    return { nickname: user.nickname };
   }
 
   async changeUser(dto: ChangeUserDto) {

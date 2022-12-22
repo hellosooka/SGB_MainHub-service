@@ -100,7 +100,7 @@ export class AuthService {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      return { ...e };
+      throw new HttpException(e.message, HttpStatus.UNAUTHORIZED);
     }
   }
 }

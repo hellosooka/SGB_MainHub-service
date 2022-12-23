@@ -24,13 +24,10 @@ import { ChangeGameDto } from './dto/change-game.dto';
 @ApiTags('Games')
 @Controller('games')
 export class GamesController {
-  constructor(private readonly gameService: GamesService) { }
+  constructor(private readonly gameService: GamesService) {}
 
   @ApiOperation({ summary: 'Getting all games' })
   @ApiResponse({ status: 200, type: [Game] })
-  @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN', 'USER')
-  @UseGuards(RolesGuard)
   @Get()
   getAllGames() {
     return this.gameService.getAllGames();
@@ -62,6 +59,9 @@ export class GamesController {
     return this.gameService.deleteGameByTitle(title);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Put('/:title')
   async changeGameByTitle(
     @Param('title') title: string,
@@ -70,6 +70,9 @@ export class GamesController {
     return this.gameService.changeGameByTitle(title, dto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor('image'))
   @Patch('/:title')
   async changeGameImageByTitle(
@@ -79,6 +82,9 @@ export class GamesController {
     return this.gameService.changeGameImageByTitle(title, image);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Post('/:gameTitle/:tagTitle')
   async addTagToGame(
     @Param('gameTitle') gameTitle: string,
